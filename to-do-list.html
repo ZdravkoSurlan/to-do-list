@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+    <head>
+        <title>VueJS</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <style>
+            
+        </style>
+    </head>
+    <body>
+        
+      <div id="app">
+        <input type="text" placeholder="Dodaj zadatak" v-model="noviZadatak"><br><br>
+        <button @click="dodaj()">Dodaj</button>
+        <br><br><ol id="mojaLista">
+            <li v-for="(todo, index) in todos" :key="index">{{index}} {{ todo.zadatak }}
+            <input type="checkbox" id="cekirano" v-model="cekirano"><button @click="obrisi(index)">obrisi</button>
+            <button @click="zavrsi()">zavrsi</button> </li>
+        </ol>
+      </div>
+      <script>
+        new Vue({
+          el: '#app',
+          data: {
+             
+             cekirano: [],
+             todos: [],
+             noviZadatak: ""
+          },
+          methods: {
+             
+            dodaj (){
+                var todo = {
+                    index:  this.index,
+                    zadatak: this.noviZadatak,
+                    zavrsen: false
+                }
+                this.todos.push(todo);
+                this.noviZadatak = "";
+            },
+            obrisi (index){
+                this.todos.splice(index,1)
+                }
+            
+                
+            
+              
+          }
+        })
+      </script>
+    </body>
+</html>
