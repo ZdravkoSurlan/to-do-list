@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+    <head>
+        <title>VueJS</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <style>
+            body {
+                margin: 0 auto;
+            }
+            #wrapper {
+                padding: 30px;
+                background: #DDD;
+                width: 50%;
+                margin: 50px auto;
+                text-align: center;
+            }
+            .zelena {
+                font-weight: bold;
+                color: green;
+                text-decoration: line-through;
+            }
+            #mojaLista li{
+                text-align: left;
+                text-transform: uppercase;
+            }
+            #mojaLista button {
+                
+            }
+        </style>
+    </head>
+    <body>
+      <div id="app">
+         
+        <div id="wrapper">
+            <input type="text" placeholder="Upisi zadatak" v-model="noviZadatak"><br><br>
+            <button @click="dodaj()">Dodaj zadatak</button>
+            <br><br><ol id="mojaLista">
+                <li v-for="(todo, index) in todos" :key="index" v-bind:class="{ zelena: todo.zavrsen }">{{ todo.zadatak }}
+                <input type="checkbox" id="cekirano" v-model="cekirano[index]">
+                <button @click="obrisi(index)" id="obrisi" v-if="cekirano[index] == true">obrisi</button>
+                <button @click="todo.zavrsen = !todo.zavrsen" id="zavrsi" v-if="cekirano[index] == true">zavrsi</button></li>
+            </ol>
+            
+             {{cekirano}}
+        </div>
+      </div>
+      <script>
+        new Vue({
+          el: '#app',
+          data: {
+              index: '',
+             cekirano: [],
+             todos: [],
+             noviZadatak: "",
+          },
+          methods: {
+             
+            dodaj (){
+                var todo = {
+                    id: this.index,
+                    zadatak: this.noviZadatak,
+                    zavrsen: false
+                }
+                if(this.noviZadatak == ''){
+                    alert('Upisite zadatak!')
+                }
+                else if (this.noviZadatak.length < 4){
+                    alert('Zadatak ne moze biti kraci od 4 slova!')
+                }
+                else {
+                this.todos.push(todo);
+                this.noviZadatak = "";
+                }
+            },
+            obrisi (id){
+                this.todos.splice(id,1)
+                cekirano: ['']
+                }
+            
+            
+              
+          }
+        })
+      </script>
+    </body>
+</html>
