@@ -61,7 +61,6 @@
                             <span @click="todos.zavrsen = !todos.zavrsen" class="btn btn-success"><i class="fas fa-check-circle"></i> Zavrsi sve</span>
                        
                     </div>
-                    {{todos}}
                     <ol id="mojaLista" class="col-sm-12 pl-0 text-light">
                         <li v-for="(todo, index) in todos" :key="index" v-bind:class="{ zelena:this.zavrsen }" class="text-left col-sm-12 d-block bg-primary rounded pt-2 pb-2 pl-0 pr-0 m-2">
                         <span class="col-sm-8 d-inline-block">{{ index }}. {{ todo.zadatak }}</span>
