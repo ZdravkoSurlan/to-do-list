@@ -6,17 +6,41 @@
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
         <style>
-            #obrisi,#zavrsi {
-                font-size: 14px;
+            body {
+                background: url("../notes.jpg") no-repeat fixed center center;
+                background-size: cover;
+            }
+            .wrapper {
+                background: rgba(79, 79, 84, 0.2);
             }
             li{
-                height: auto;
+                transition: 1s all ease;
+                animation-name: show;
+                animation-duration: 2s;
             }
             .zelena {
-                background: #28a745 !important;
+                background: #16c40d !important;
             }
             .dugmici {
                 font-size: 10px;
+            }
+            
+            @keyframes show {
+              0% {
+                transform: scale(0.8);
+              }
+              25% {
+                transform: scale(1.1);
+              }
+              50% {
+                transform: scale(1);
+              }
+              75% {
+                transform: scale(1.01);
+              }
+              100% {
+                transform: scale(1);
+              }
             }
         </style>
     </head>
@@ -25,38 +49,64 @@
          
         <div class="container">
             <div class="row">
-                <div class="col-sm-10 offset-sm-1 text-center bg-secondary mt-5 rounded">
+                <div class=" wrapper col-sm-10 offset-sm-1 text-center mt-5 pt-5 rounded">
+                    <h1 class="text-info"><strong>Broj zadataka: {{todos.length}}</strong></h1><br><br>
                     <div class="input-group-text m-3">
                     <input type="text" class="form-control mr-3" placeholder="Upisi zadatak" v-model="noviZadatak" v-on:keyup.enter="dodaj()">
                     <span @click="dodaj()" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Dodaj zadatak</span>
                     </div>
                     <br><br>
+                    <div class="col-sm-12 text-center mb-4">
+                        <span data-toggle="modal" data-target="#modalZaBrisanje"  class="btn btn-danger"><i class="fas fa-times-circle"></i> Obrisi sve</span>
+                            <span @click="todos.zavrsen = !todos.zavrsen" class="btn btn-success"><i class="fas fa-check-circle"></i> Zavrsi sve</span>
+                       
+                    </div>
+                    {{todos}}
                     <ol id="mojaLista" class="col-sm-12 pl-0 text-light">
-                        <li v-for="(todo, index) in todos" :key="index" v-bind:class="{ zelena:todo.zavrsen }" class="text-left col-sm-12 d-block bg-primary rounded pt-2 pb-2 pl-0 pr-0 m-2">
-                        <span class="col-sm-9 d-inline-block">{{ index }}. {{ todo.zadatak }}</span>
-                        <span class="dugmici col-sm-3 text-right">
+                        <li v-for="(todo, index) in todos" :key="index" v-bind:class="{ zelena:this.zavrsen }" class="text-left col-sm-12 d-block bg-primary rounded pt-2 pb-2 pl-0 pr-0 m-2">
+                        <span class="col-sm-8 d-inline-block">{{ index }}. {{ todo.zadatak }}</span>
+                        <span class="dugmici col-sm-3 text-left d-inline-block">
                             <input type="checkbox" id="cekirano" v-model="cekirano[index]">
-                            <span @click="obrisi(index)" id="obrisi" v-if="cekirano[index] == true" class="btn btn-danger"><i class="fas fa-times-circle"></i></span>
-                            <span @click="todo.zavrsen = !todo.zavrsen" id="zavrsi" v-if="cekirano[index] == true" class="btn btn-success"><i class="fas fa-check-circle"></i></span>
+                            <span @click="obrisi(index)" id="obrisi" v-if="cekirano[index] == true" class="ml-4 btn btn-danger"><i class="fas fa-times-circle"></i></span>
+                            <span @click="zavrsi()" id="zavrsi" v-if="cekirano[index] == true" class="btn btn-success"><i class="fas fa-check-circle"></i></span>
                         </span>
                         </li>
                     </ol>
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="modalZaBrisanje">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Obrisati?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Da li ste sigurni da zelite da obrisete sve zadatke?</p>
+                <p class="text-danger">Broj zadataka: {{todos.length}}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button @click="obrisiSve" v-on:keyup.enter="obrisiSve()" type="button" data-dismiss="modal" class="btn btn-primary">Potvrdi</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <script>
         new Vue({
           el: '#app',
           data: {
-             
-             zavrsen: false,
              cekirano: [],
              todos: [],
              noviZadatak: "",
           },
           computed: {
-              
+             
           },
           methods: {
              
@@ -64,10 +114,10 @@
                 var todo = {
                     id: this.index,
                     zadatak: this.noviZadatak,
-                    zavrsen: this.zavrsen
+                    zavrsen: false
                 }
                 if(this.noviZadatak == ''){
-                    alert('Upisite zadatak!')
+                    alert('Niste upisali zadatak!')
                 }
                 else if (this.noviZadatak.length < 4){
                     alert('Zadatak ne moze biti kraci od 4 slova!')
@@ -77,15 +127,29 @@
                 this.noviZadatak = "";
                 }
             },
-            obrisi (id){
+            obrisi: function (id){
                 this.todos.splice(id,1)
                 this.cekirano = []
-                }
-            
+                },
+            obrisiSve: function (){
+                if(this.todos.length == 0)
+                    alert('Nemate nijedan zadatak!')
+                else 
+                this.todos.splice (0,this.todos.length)
+                this.cekirano = []
+                this.noviZadatak = ""
+                },
+            zavrsi: function(){
+                 this.zavrsen = !this.zavrsen
+                 return (this.zavrsen)
+            }
             
               
           }
         })
       </script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
 </html>
