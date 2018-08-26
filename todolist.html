@@ -2,56 +2,61 @@
 <html>
     <head>
         <title>VueJS</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
         <style>
-            body {
-                margin: 0 auto;
+            #obrisi,#zavrsi {
+                font-size: 14px;
             }
-            #wrapper {
-                padding: 30px;
-                background: #DDD;
-                width: 50%;
-                margin: 50px auto;
-                text-align: center;
+            li{
+                height: auto;
             }
             .zelena {
-                font-weight: bold;
-                color: green;
-                text-decoration: line-through;
+                background: #28a745 !important;
             }
-            #mojaLista li{
-                text-align: left;
-                text-transform: uppercase;
-            }
-            #mojaLista button {
-                
+            .dugmici {
+                font-size: 10px;
             }
         </style>
     </head>
     <body>
       <div id="app">
          
-        <div id="wrapper">
-            <input type="text" placeholder="Upisi zadatak" v-model="noviZadatak"><br><br>
-            <button @click="dodaj()">Dodaj zadatak</button>
-            <br><br><ol id="mojaLista">
-                <li v-for="(todo, index) in todos" :key="index" v-bind:class="{ zelena: todo.zavrsen }">{{ todo.zadatak }}
-                <input type="checkbox" id="cekirano" v-model="cekirano[index]">
-                <button @click="obrisi(index)" id="obrisi" v-if="cekirano[index] == true">obrisi</button>
-                <button @click="todo.zavrsen = !todo.zavrsen" id="zavrsi" v-if="cekirano[index] == true">zavrsi</button></li>
-            </ol>
-            
-             {{cekirano}}
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-10 offset-sm-1 text-center bg-secondary mt-5 rounded">
+                    <div class="input-group-text m-3">
+                    <input type="text" class="form-control mr-3" placeholder="Upisi zadatak" v-model="noviZadatak" v-on:keyup.enter="dodaj()">
+                    <span @click="dodaj()" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Dodaj zadatak</span>
+                    </div>
+                    <br><br>
+                    <ol id="mojaLista" class="col-sm-12 pl-0 text-light">
+                        <li v-for="(todo, index) in todos" :key="index" v-bind:class="{ zelena:todo.zavrsen }" class="text-left col-sm-12 d-block bg-primary rounded pt-2 pb-2 pl-0 pr-0 m-2">
+                        <span class="col-sm-9 d-inline-block">{{ index }}. {{ todo.zadatak }}</span>
+                        <span class="dugmici col-sm-3 text-right">
+                            <input type="checkbox" id="cekirano" v-model="cekirano[index]">
+                            <span @click="obrisi(index)" id="obrisi" v-if="cekirano[index] == true" class="btn btn-danger"><i class="fas fa-times-circle"></i></span>
+                            <span @click="todo.zavrsen = !todo.zavrsen" id="zavrsi" v-if="cekirano[index] == true" class="btn btn-success"><i class="fas fa-check-circle"></i></span>
+                        </span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
         </div>
       </div>
       <script>
         new Vue({
           el: '#app',
           data: {
-              index: '',
+             
+             zavrsen: false,
              cekirano: [],
              todos: [],
              noviZadatak: "",
+          },
+          computed: {
+              
           },
           methods: {
              
@@ -59,7 +64,7 @@
                 var todo = {
                     id: this.index,
                     zadatak: this.noviZadatak,
-                    zavrsen: false
+                    zavrsen: this.zavrsen
                 }
                 if(this.noviZadatak == ''){
                     alert('Upisite zadatak!')
@@ -74,7 +79,7 @@
             },
             obrisi (id){
                 this.todos.splice(id,1)
-                cekirano= []
+                this.cekirano = []
                 }
             
             
