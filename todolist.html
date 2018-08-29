@@ -134,7 +134,6 @@
       el: '#app',
       data: {
         index: 0,
-        finished: [],
         todos: [],
         newTask: "",
       },
@@ -174,16 +173,7 @@
             this.todos[i].finishedTask = true
         },
         deleteFinished: function() {
-          for (var i = 0; i < this.todos.length; i++) {
-            if (this.todos[i].finishedTask == true) {
-              this.finished.push(this.todos[i].index)
-            }
-              for (var j = 0; j < this.finished.length; j++) {
-                   this.todos.splice(this.finished[j], 1
-
-
-            }
-          }
+            this.todos = this.todos.filter(todo => !todo.finishedTask)
         }
       }
     })
