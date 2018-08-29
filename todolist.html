@@ -123,7 +123,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button @click="deleteSve" v-on:keyup.enter="deleteSve()" type="button" data-dismiss="modal" class="btn btn-primary">Potvrdi</button>
+            <button @click="deleteEverything" v-on:keyup.enter="deleteEverything()" type="button" data-dismiss="modal" class="btn btn-primary">Potvrdi</button>
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@
         delete: function(index) {
           this.todos.splice(index, 1)
         },
-        deleteSve: function() {
+        deleteEverything: function() {
           if (this.todos.length == 0)
             alert('You dont have tasks!')
           else
