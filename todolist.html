@@ -100,7 +100,7 @@
             <li v-for="(todo, index) in todos" v-bind:class="{ green:todo.finishedTask }" class="text-left col-sm-12 d-block bg-primary rounded pt-3 pb-3 pl-0 pr-0 m-2">
               <span @click="finish(index)" id="finish" class="ml-4 mr-3" title="Finish task"><i class="fas fa-check-double"></i></span>
               <span class="col-sm-10 d-inline-block mt-2 mb-2 ml-3 h4" :class="{ line:todo.finishedTask }">{{ index+1 }}. {{ todo.task }}</span>
-              <span @click="delete(index)" id="delete" class="ml-4" title="Delete task"><i class="fas fa-times"></i></span>
+              <span @click="deleteOne(index)" id="delete" class="ml-4" title="Delete task"><i class="fas fa-times"></i></span>
               </span>
             </li>
           </ol>
@@ -156,7 +156,7 @@
             this.newTask = "";
           }
         },
-        delete: function(index) {
+        deleteOne: function(index) {
           this.todos.splice(index, 1)
         },
         deleteEverything: function() {
