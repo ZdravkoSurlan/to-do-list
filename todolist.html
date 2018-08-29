@@ -1,149 +1,196 @@
 <!doctype html>
 <html>
-    <head>
-        <title>VueJS</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-        <style>
-            body {
-                background: url("../notes.jpg") no-repeat fixed center center;
-                background-size: cover;
-            }
-            li{
-                transition: 1s all ease;
-                animation-name: show;
-                animation-duration: 1s;
-            }
-            .zelena {
-                background: #16c40d !important;
-            }
-            .dugmici span {
-                font-size: 10px;
-            }
-            .dugmici span i {
-                font-size: 15px;
-            }
-            
-            @keyframes show {
-              0% {
-                transform: scale(0);
-              }
-              
-              100% {
-                transform: scale(1);
-              }
-            }
-        </style>
-    </head>
-    <body>
-      <div id="app">
-         
-        <div class="container">
-            <div class="row">
-                <div class=" wrapper col-sm-10 offset-sm-1 text-center mt-5 pt-5 rounded">
-                    <h1 class="text-info"><strong>Broj zadataka: {{todos.length}}</strong></h1><br><br>
-                    <div class="input-group-text m-3 bg-transparent">
-                    <input type="text" class="form-control mr-3" placeholder="Upisi zadatak" v-model="noviZadatak" v-on:keyup.enter="dodaj()">
-                    <span @click="dodaj" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Dodaj zadatak</span>
-                    </div>
-                    <br><br>
-                    <div class="col-sm-12 text-center mb-4">
-                       
-                    </div>
-                    <ol id="mojaLista" class="col-sm-12 pl-0 text-light">
-                        <span data-toggle="modal" data-target="#modalZaBrisanje"  class="btn btn-danger"><i class="fas fa-times-circle"></i> Obrisi sve</span>
-                        <span @click="zavrsiSve" class="btn btn-success"><i class="fas fa-check-circle"></i> Zavrsi sve</span>
+<head>
+  <title>VueJS</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 
-                        <li v-for="(todo, index) in todos" v-bind:class="{ zelena:todo.zavrsen }" class="text-left col-sm-12 d-block bg-primary rounded pt-3 pb-3 pl-0 pr-0 m-2">
-                            <span class="col-sm-8 d-inline-block">{{ index }}. {{ todo.zadatak }}</span>
-                            <span class="dugmici col-sm-3 text-left d-inline-block">
-                                <input type="checkbox" id="cekirano" v-model="cekirano[index]">
-                                <span @click="obrisi(index)" id="obrisi" v-if="cekirano[index] == true" class="ml-4 btn btn-danger"><i class="fas fa-times-circle"></i></span>
-                                <span @click="zavrsi(index)" id="zavrsi" v-if="cekirano[index] == true" class="btn btn-success"><i class="fas fa-check-circle"></i></span>
-                            </span>
-                        </li>
-                    </ol>
-                </div>
-            </div>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <style>
+    body {
+      background: url("../notes.jpg") no-repeat fixed center center;
+      background-size: cover;
+    }
+
+    li {
+      transition: 0.5s all ease;
+      animation-name: show;
+      animation-duration: 1s;
+    }
+
+    .green {
+      background: #58ba43 !important;
+    }
+
+    .line {
+      text-decoration: line-through;
+    }
+
+    #finish {
+      font-size: 22px;
+    }
+
+    #finish:hover i {
+      transform: scale(1.3);
+      transition: all 1s ease;
+      cursor: pointer;
+    }
+
+    #delete {
+      display: none;
+      font-size: 22px;
+    }
+
+    #delete:hover {
+      animation-name: heart;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      transition: all 1s ease;
+      cursor: pointer;
+    }
+
+    li:hover #delete {
+      display: inline-block;
+    }
+
+    @keyframes heart {
+      0% {
+        transform: scale(1.0);
+      }
+      33% {
+        transform: scale(1.3);
+      }
+      66% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.3);
+      }
+    }
+
+    @keyframes show {
+      0% {
+        transform: scale(0);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+
+    <div class="container">
+      <div class="row">
+        <div class=" wrapper col-sm-10 offset-sm-1 text-center mt-5 pt-5 rounded">
+          <h1 class="text-info"><strong>Number of tasks: {{todos.length}}</strong></h1><br><br>
+          <div class="input-group-text m-3 bg-transparent">
+            <input type="text" class="form-control mr-3" placeholder="Write..." v-model="newTask" v-on:keyup.enter="addTask()">
+            <span @click="addTask" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Task</span>
+          </div>
+          <br><br>
+          <ol id="myList" class="col-sm-12 pl-0 text-light">
+            <span data-toggle="modal" data-target="#deleteModal" class="btn btn-danger"><i class="fas fa-times-circle"></i> Delete everything</span>
+            <span @click="deleteFinished" class="btn btn-info"><i class="far fa-check-circle"></i> Delete only finished</span>
+            <span @click="finishEverything" class="btn btn-success"><i class="fas fa-check-circle"></i> Finish Everything</span>
+            <li v-for="(todo, index) in todos" v-bind:class="{ green:todo.finishedTask }" class="text-left col-sm-12 d-block bg-primary rounded pt-3 pb-3 pl-0 pr-0 m-2">
+              <span @click="finish(index)" id="finish" class="ml-4 mr-3" title="Finish task"><i class="fas fa-check-double"></i></span>
+              <span class="col-sm-10 d-inline-block mt-2 mb-2 ml-3 h4" :class="{ line:todo.finishedTask }">{{ index+1 }}. {{ todo.task }}</span>
+              <span @click="delete(index)" id="delete" class="ml-4" title="Delete task"><i class="fas fa-times"></i></span>
+              </span>
+            </li>
+          </ol>
         </div>
-        <!-- Modal -->
-        <div class="modal" tabindex="-1" role="dialog" id="modalZaBrisanje">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Obrisati?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="deleteModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Obrisati?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-              </div>
-              <div class="modal-body">
-                <p>Da li ste sigurni da zelite da obrisete sve zadatke?</p>
-                <p class="text-danger">Broj zadataka: {{todos.length}}</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button @click="obrisiSve" v-on:keyup.enter="obrisiSve()" type="button" data-dismiss="modal" class="btn btn-primary">Potvrdi</button>
-              </div>
-            </div>
+          </div>
+          <div class="modal-body">
+            <p>Da li ste sigurni da zelite da obrisete sve zadatke?</p>
+            <p class="text-danger">Broj taska: {{todos.length}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button @click="deleteSve" v-on:keyup.enter="deleteSve()" type="button" data-dismiss="modal" class="btn btn-primary">Potvrdi</button>
           </div>
         </div>
       </div>
-      <script>
-        new Vue({
-          el: '#app',
-          data: {
-             cekirano: [],
-             todos: [],
-             noviZadatak: "",
-          },
-          computed: {
-             
-          },
-          methods: {
-             
-            dodaj (){
-                todo = {
-                    index: this.todos.length,
-                    zadatak: this.noviZadatak,
-                    zavrsen: false
-                }
-                if(this.noviZadatak == ''){
-                    alert('Niste upisali zadatak!')
-                }
-                else {
-                this.todos.push(todo);
-                this.noviZadatak = "";
-                }
-            },
-            obrisi: function (index){
-                this.todos.splice(index,1)
-                this.cekirano = []
-            },
-            obrisiSve: function (){
-                if(this.todos.length == 0)
-                    alert('Nemate nijedan zadatak!')
-                else 
-                this.todos.splice (0,this.todos.length)
-                this.cekirano = []
-                this.noviZadatak = ""
-            },
-            zavrsi: function(index){
-              console.log(index);
-              this.todos[index].zavrsen=!this.todos[index].zavrsen
-              this.cekirano = []
-            },
-            zavrsiSve: function() {
-              for(var i=0;i<this.todos.length;i++)
-                this.todos[i].zavrsen = true
-                this.cekirano = []
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        index: 0,
+        finished: [],
+        todos: [],
+        newTask: "",
+      },
+      computed: {
+
+      },
+      methods: {
+
+        addTask() {
+          todo = {
+            index: this.index++,
+            task: this.newTask,
+            finishedTask: false
+          }
+          if (this.newTask == '') {
+            alert('Write a task!')
+          } else {
+            this.todos.push(todo);
+            this.newTask = "";
+          }
+        },
+        delete: function(index) {
+          this.todos.splice(index, 1)
+        },
+        deleteSve: function() {
+          if (this.todos.length == 0)
+            alert('You dont have tasks!')
+          else
+            this.todos.splice(0, this.todos.length)
+          this.newTask = ""
+        },
+        finish: function(index) {
+          this.todos[index].finishedTask = !this.todos[index].finishedTask
+        },
+        finishEverything: function() {
+          for (var i = 0; i < this.todos.length; i++)
+            this.todos[i].finishedTask = true
+        },
+        deleteFinished: function() {
+          for (var i = 0; i < this.todos.length; i++) {
+            if (this.todos[i].finishedTask == true) {
+              this.finished.push(this.todos[i].index)
+            }
+              for (var j = 0; j < this.finished.length; j++) {
+                   this.todos.splice(this.finished[j], 1
+
+
             }
           }
-        })
-      </script>
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    </body>
+        }
+      }
+    })
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+
 </html>
