@@ -9,39 +9,31 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
   <style>
     body {
-      background: url("../notes.jpg") no-repeat fixed center center;
-      background-size: cover;
+      background: url("notes.png");
     }
-
     li {
       transition: 0.5s all ease;
       animation-name: show;
       animation-duration: 1s;
     }
-
     .green {
       background: #58ba43 !important;
     }
-
     .line {
       text-decoration: line-through;
     }
-
     #finish {
       font-size: 22px;
     }
-
     #finish:hover i {
       transform: scale(1.3);
       transition: all 1s ease;
       cursor: pointer;
     }
-
     #delete {
       display: none;
       font-size: 22px;
     }
-
     #delete:hover {
       animation-name: heart;
       animation-duration: 2s;
@@ -49,11 +41,9 @@
       transition: all 1s ease;
       cursor: pointer;
     }
-
     li:hover #delete {
       display: inline-block;
     }
-
     @keyframes heart {
       0% {
         transform: scale(1.0);
@@ -68,12 +58,10 @@
         transform: scale(1.3);
       }
     }
-
     @keyframes show {
       0% {
         transform: scale(0);
       }
-
       100% {
         transform: scale(1);
       }
@@ -83,7 +71,6 @@
 
 <body>
   <div id="app">
-
     <div class="container">
       <div class="row">
         <div class=" wrapper col-sm-10 offset-sm-1 text-center mt-5 pt-5 rounded">
@@ -92,19 +79,19 @@
             <input type="text" class="form-control mr-3" placeholder="Write..." v-model="newTask" v-on:keyup.enter="addTask()">
             <span @click="addTask" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Task</span>
           </div>
-          <br><br>
           <ol id="myList" class="col-sm-12 pl-0 text-light">
-            <span data-toggle="modal" data-target="#deleteModal" class="btn btn-danger"><i class="fas fa-times-circle"></i> Delete everything</span>
-            <span @click="deleteFinished" class="btn btn-info"><i class="far fa-check-circle"></i> Delete only finished</span>
-            <span @click="finishEverything" class="btn btn-success"><i class="fas fa-check-circle"></i> Finish Everything</span>
-            <div class="input-group-text ml-auto mr-auto mt-4 col-sm-6 bg-gray text-center" v-if="todos.length > 0">
+              <div class="ml-auto mr-auto mt-4 text-center" v-if="todos.length > 0">
+                <span data-toggle="modal" data-target="#deleteModal" class="btn btn-danger"><i class="fas fa-times-circle"></i> Delete everything</span>
+                <span @click="deleteFinished" class="btn btn-info"><i class="far fa-check-circle"></i> Delete only finished</span>
+                <span @click="finishEverything" class="btn btn-success"><i class="fas fa-check-circle"></i> Finish Everything</span>
+              </div>
+            <div class="input-group-text ml-auto mr-auto mt-4 mb-5 col-sm-6 bg-gray text-center" v-if="todos.length > 0">
               <input type="text" class="form-control" placeholder="Search for task..." v-model="searchTask">
             </div>
             <li v-for="(todo,index) in filteredTasks" v-bind:class="{ green:todo.finishedTask }" class="text-left col-sm-12 d-block bg-primary rounded pt-3 pb-3 pl-0 pr-0 m-2">
-              <span @click="finish(index)" id="finish" class="ml-4 mr-3" title="Finish task"><i class="fas fa-check-double"></i></span>
-              <span class="col-sm-10 d-inline-block mt-2 mb-2 ml-3 h4" :class="{ line:todo.finishedTask }">{{ todo.index+1 }}. {{ todo.task }}</span>
+              <span @click="finish(index)" id="finish" class="ml-4 mr-3" title="Finish task"><i class="fas fa-check"></i></span>
+              <span class="col-sm-10 d-inline-block mt-2 mb-2 ml-3 h4" :class="{ line:todo.finishedTask }">{{ todo.task }}</span>
               <span @click="deleteOne(index)" id="delete" class="ml-4" title="Delete task"><i class="fas fa-times"></i></span>
-              </span>
             </li>
           </ol>
         </div>
@@ -150,7 +137,6 @@
         }
       },
       methods: {
-
         addTask() {
           todo = {
             index: this.index++,
@@ -164,9 +150,8 @@
             this.newTask = "";
           }
         },
-        deleteOne: function() {
-          this.todos.splice(todo.index, 1)
-          
+        deleteOne: function(index) {
+          this.todos.splice(index, 1)
         },
         deleteEverything: function() {
           if (this.todos.length == 0)
@@ -185,6 +170,7 @@
         },
         deleteFinished: function() {
             this.todos = this.todos.filter(todo => !todo.finishedTask)
+            this.index = 0
         }
       }
     })
@@ -193,5 +179,4 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
-
 </html>
