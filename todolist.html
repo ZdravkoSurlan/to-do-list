@@ -85,14 +85,15 @@
                 <span @click="deleteFinished" class="btn btn-info"><i class="far fa-check-circle"></i> Delete only finished</span>
                 <span @click="finishEverything" class="btn btn-success"><i class="fas fa-check-circle"></i> Finish Everything</span>
               </div>
-            <div class="input-group-text ml-auto mr-auto mt-4 mb-5 col-sm-6 bg-gray text-center" v-if="todos.length > 0">
-              <input type="text" class="form-control" placeholder="Search for task..." v-model="searchTask">
-            </div>
-            <li v-for="(todo,index) in filteredTasks" v-bind:class="{ green:todo.finishedTask }" class="text-left col-sm-12 d-block bg-primary rounded pt-3 pb-3 pl-0 pr-0 m-2">
-              <span @click="finish(index)" id="finish" class="ml-4 mr-3" title="Finish task"><i class="fas fa-check"></i></span>
-              <span class="col-sm-10 d-inline-block mt-2 mb-2 ml-3 h4" :class="{ line:todo.finishedTask }">{{ todo.task }}</span>
-              <span @click="deleteOne(index)" id="delete" class="ml-4" title="Delete task"><i class="fas fa-times"></i></span>
-            </li>
+              <div class="input-group-text ml-auto mr-auto mt-4 mb-5 col-sm-6 bg-gray text-center" v-if="todos.length > 0">
+                <input type="text" class="form-control" placeholder="Search for task..." v-model="searchTask">
+              </div>
+              <li v-for="(todo,index) in filteredTasks" v-bind:class="{ green:todo.finishedTask }" class="text-left col-sm-12 d-block bg-primary rounded pt-3 pb-3 pl-0 pr-0 m-2">
+                <span @click="finish(index)" id="finish" class="ml-4 mr-3" title="Finish task"><i class="fas fa-check"></i></span>
+                <input type="text" class="form-control col-sm-10 d-inline-block" v-model="todo.task" v-if="todo.editing == true" @keyup.enter="endEditing(index)" @blur="endEditing(index)">
+                <span class="col-sm-10 d-inline-block mt-2 mb-2 ml-3 h4"  v-if="todo.editing == false" @dblclick="editTask(index)" :class="{ line:todo.finishedTask }">{{ todo.task }}</span>
+                <span @click="deleteOne(index)" id="delete" class="ml-4" title="Delete task"><i class="fas fa-times"></i></span>
+              </li>
           </ol>
         </div>
       </div>
@@ -120,14 +121,16 @@
     </div>
   </div>
   <script>
+  
     new Vue({
       el: '#app',
       data: {
+        editInput: false,
         searchTask: '',
         index: 0,
-        finished: [],
         todos: [],
         newTask: "",
+        editedTask: ""
       },
       computed: {
         filteredTasks: function() {
@@ -141,7 +144,8 @@
           todo = {
             index: this.index++,
             task: this.newTask,
-            finishedTask: false
+            finishedTask: false,
+            editing: false
           }
           if (this.newTask == '') {
             alert('Write a task!')
@@ -171,7 +175,20 @@
         deleteFinished: function() {
             this.todos = this.todos.filter(todo => !todo.finishedTask)
             this.index = 0
+        },
+        editTask: function(index) {
+          this.todos[index].editing = true
+          console.log(this.todos[index].editing)
+          this.editedTask = this.todos[index].task
+          console.log(this.editedTask)
+        },
+        endEditing: function(index) {
+            this.todos[index].editing = false
+          this.editedTask = ""
+          if(this.todos[index].task.trim() === "")
+            this.deleteOne()
         }
+        
       }
     })
   </script>
